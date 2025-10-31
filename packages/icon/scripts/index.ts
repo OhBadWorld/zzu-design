@@ -98,23 +98,23 @@ async function buildIndex(data: IconData[]) {
     fs.outputFileSync(path.join(cwd, 'source', 'icons.json'), JSON.stringify(data, null, 2));
 }
 
-async function buildType(data: IconData[]) {
-    const exports = [];
+// async function buildType(data: IconData[]) {
+//     const exports = [];
 
-    for (const item of data) {
-        exports.push(`${item.componentName}: typeof import('@kg-design/icon')['${item.componentName}'];`);
-    }
+//     for (const item of data) {
+//         exports.push(`${item.componentName}: typeof import('@kg-design/icon')['${item.componentName}'];`);
+//     }
 
-    const typeContent = getType({ exports });
+//     const typeContent = getType({ exports });
 
-    fs.outputFileSync(path.join(cwd, 'src', 'icon-components.ts'), typeContent);
-}
+//     fs.outputFileSync(path.join(cwd, 'src', 'icon-components.ts'), typeContent);
+// }
 
 const generate = async () => {
     const data = getSVGData();
     await buildIconComponent(data);
     await buildIndex(data);
-    await buildType(data);
+    // await buildType(data);
 };
 
 generate();

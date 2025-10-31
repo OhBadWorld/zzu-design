@@ -2,9 +2,12 @@
     "extends": "../../tsconfig.json",
     "include": ["src"],
     "compilerOptions": {
-        "outDir": "dist",
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
         "noEmit": true,
+        "jsx": "preserve",
+        "jsxImportSource": "vue",
         "allowImportingTsExtensions": true,
         "resolvePackageJsonImports": true
-    }
+    },
+    "references": [{ "path": "./tsconfig.build.json" }]
 }

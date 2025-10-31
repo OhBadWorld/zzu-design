@@ -143,7 +143,11 @@ export const ${componentName}: SFCWithInstall<typeof _${componentName}> = withIn
 
 export default ${componentName};
 
-export * from '../type';`;
+declare module 'vue' {
+    export interface GlobalComponents {
+        Kg${componentName}: typeof ${componentName};
+    }
+}`;
 };
 
 export const getIcon = ({ imports, components }: { imports: string[]; components: string[] }) => {
@@ -172,17 +176,21 @@ export default Icon;`;
 export const getIndex = ({ exports }: { exports: string[] }) => {
     return `export { default } from './icon';
 ${exports.join('\n')}
-export type {} from './icon-components';`;
+
+export * from './type';
+
+// export * from './icon-components';
+`;
 };
 
 export const getType = ({ exports }: { exports: string[] }) => {
-    return `// @ts-nocheck
-
-declare module 'vue' {
+    return `declare module 'vue' {
   export interface GlobalComponents {
 ${exports.map((item) => `${' '.repeat(4)}${item}`).join('\n')}
   }
 }
+
+export * from './type';
 
 export {};`;
 };

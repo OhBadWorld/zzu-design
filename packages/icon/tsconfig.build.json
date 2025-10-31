@@ -1,0 +1,12 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "composite": true,
+        "module": "ESNext",
+        "types": ["node"],
+        "strict": true,
+        "noImplicitAny": true,
+        "allowSyntheticDefaultImports": true
+    },
+    "include": ["scripts", "package.json"]
+}
