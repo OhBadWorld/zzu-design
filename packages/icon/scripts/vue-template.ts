@@ -27,7 +27,7 @@ export function replaceColorsWithCssVars(svgHtml: string, colors: string[]): str
     return modifiedSvg;
 }
 
-export const getIconVue = ({ componentName, svgHtml }: { name: string; componentName: string; svgHtml: string }) => {
+export const getIconVue = ({ name, componentName, svgHtml }: { name: string; componentName: string; svgHtml: string }) => {
     // 提取颜色并替换为CSS变量
     const colors = extractColorsFromSvg(svgHtml);
     const modifiedSvgHtml = replaceColorsWithCssVars(svgHtml, colors);
@@ -51,11 +51,13 @@ const ns = useNamespace('icon');
 const { spin, color, size, rotate } = defineProps(iconProps);
 const emit = defineEmits(iconEmits);
 
-const cls = computed(() => [
-    ns.b(),
-    ns.be('activity'),
-    ns.is('loading', spin),
-])
+const cls = computed(() => {
+    return [
+        ns.b(),
+        '${name}',
+        ns.is('loading', spin),
+    ]
+})
 
 const innerStyle = computed(() => {
     const styles: CSSProperties = {};
@@ -177,10 +179,7 @@ export const getIndex = ({ exports }: { exports: string[] }) => {
     return `export { default } from './icon';
 ${exports.join('\n')}
 
-export * from './type';
-
-// export * from './icon-components';
-`;
+export * from './type';`;
 };
 
 export const getType = ({ exports }: { exports: string[] }) => {
