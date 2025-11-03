@@ -1,0 +1,29 @@
+@use 'config';
+@use 'sass:math';
+@use 'sass:color';
+
+@function roundColor($color) {
+    $r: math.round(color.channel($color, 'red'));
+    $g: math.round(color.channel($color, 'green'));
+    $b: math.round(color.channel($color, 'blue'));
+    $a: color.channel($color, 'alpha');
+
+    @return rgba($r, $g, $b, $a);
+}
+
+// join var name
+// joinVarName(('button', 'text-color')) => '--kg-button-text-color'
+@function joinVarName($list) {
+    $name: '--' + config.$namespace;
+    @each $item in $list {
+        @if $item != '' {
+            $name: $name + '-' + $item;
+        }
+    }
+    @return $name;
+}
+
+// getCssVar('button', 'text-color') => var(--kg-button-text-color)
+@function getCssVar($args...) {
+    @return var(#{joinVarName($args)});
+}

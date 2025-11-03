@@ -1,0 +1,14 @@
+import { defineConfig } from 'tsdown';
+import Vue from 'unplugin-vue/rolldown';
+import scss from 'rollup-plugin-scss';
+
+export default defineConfig(() => ({
+    entry: ['src/index.ts'],
+    platform: 'browser' as const,
+    minify: true,
+    plugins: [Vue({ isProduction: true }), scss({ fileName: 'index.css' })],
+    unbundle: true,
+    dts: {
+        vue: true,
+    },
+}));
