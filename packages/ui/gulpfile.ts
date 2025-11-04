@@ -51,7 +51,14 @@ function buildThemeChalk() {
         .pipe(sass.sync())
         .pipe(autoprefixer({ cascade: false }))
         .pipe(compressWithCssnano())
-        .pipe(rename({ extname: '.css' }))
+        .pipe(
+            rename(function (file) {
+                if (file.dirname.includes('/style')) {
+                    file.dirname = file.dirname.replace('/style', '');
+                }
+                file.extname = '.css';
+            }),
+        )
         .pipe(dest(distPath));
 }
 
@@ -60,25 +67,48 @@ function buildThemeChalk() {
  * example: dist/divider/style/index.css -> dist/style/divider/index.css
  */
 function copyThemeSource() {
-    return src([path.resolve(distPath, '**', '*.css'), '!' + path.resolve(distPath, 'style', '**', '*.css')])
-        .pipe(
-            rename(function (file) {
-                // 处理路径转换，例如：divider/style/index.css -> divider/index.css
-                if (file.dirname.includes('/style')) {
-                    file.dirname = file.dirname.replace('/style', '');
-                }
-            }),
-        )
-        .pipe(dest(styleDestPath));
+    return src([path.resolve(distPath, '**', '*.css'), '!' + path.resolve(distPath, 'style', '**', '*.css')]).pipe(dest(styleDestPath));
 }
 
 // merge all dist/xx/style/index.css to dist/style/index.css
 function mergeThemeStyle() {
-    return src([path.resolve(distPath, 'style/base.css'), path.resolve(distPath, '**', 'style/index.css')])
+    return src([path.resolve(distPath, 'style/base.css'), path.resolve(distPath, '**', 'index.css')])
         .pipe(concat('index.css'))
         .pipe(dest(styleDestPath));
 }
 
-export const build: TaskFunction = parallel(series(buildThemeChalk, copyThemeSource, mergeThemeStyle));
+// generate index.js file content pipeline
+function setJsContent() {
+    return new Transform({
+        objectMode: true,
+        transform(file, _encoding, callback) {
+            const stylePath = file.dirname;
+            const distStylePath = path.join(stylePath, 'style');
+            const components = stylePath.split(path.sep);
+            const componentName = components[components.length - 1]; // 获取组件名
+
+            const jsContent = `import '../../style/base.css';
+import '../index.css';`;
+
+            const vinylFile = new file.constructor({
+                base: distStylePath,
+                path: path.join(distStylePath, 'index.js'),
+                contents: Buffer.from(jsContent),
+            });
+
+            consola.success(`${chalk.cyan(`Generated ${componentName}/style/index.js`)}`);
+            callback(null, vinylFile);
+        },
+    });
+}
+
+// auto import style
+function autoImportStyle() {
+    return src([path.resolve(distPath, '**', '*.css'), '!' + path.resolve(distPath, 'style', '**', '*.css')])
+        .pipe(setJsContent())
+        .pipe(dest((file) => file.dirname));
+}
+
+export const build: TaskFunction = parallel(series(buildThemeChalk, copyThemeSource, mergeThemeStyle, autoImportStyle));
 
 export default build;
