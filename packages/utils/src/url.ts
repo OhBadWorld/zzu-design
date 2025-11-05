@@ -46,7 +46,8 @@ function qs(url?: string) {
         }
 
         return result;
-    } catch (_) {
+    } catch (e) {
+        console.log(e);
         return result;
     }
 }

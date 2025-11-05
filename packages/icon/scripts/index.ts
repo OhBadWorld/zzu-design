@@ -5,7 +5,7 @@ import { optimize } from 'svgo';
 import { JSDOM } from 'jsdom';
 import { toPascalCase } from '@kg-design/utils';
 import { svgoConfig } from './svgo.config';
-import { getIconIndex, getIconType, getIconVue, getIcon, getIndex, getType } from './vue-template';
+import { getIconIndex, getIconType, getIconVue, getIcon, getIndex } from './vue-template';
 
 interface IconData {
     name: string;

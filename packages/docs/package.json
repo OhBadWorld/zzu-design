@@ -9,8 +9,10 @@
         "docs:build": "vitepress build",
         "docs:preview": "vitepress preview"
     },
-    "keywords": [],
-    "author": "",
+    "keywords": [
+        "docs"
+    ],
+    "author": "yuanjie.dong",
     "license": "ISC",
     "packageManager": "pnpm@10.18.2",
     "dependencies": {

@@ -29,8 +29,11 @@
         "build:style": "gulp",
         "dev:style": "gulp watch"
     },
-    "keywords": [],
-    "author": "",
+    "keywords": [
+        "kg-design",
+        "ui"
+    ],
+    "author": "yuanjie.dong",
     "license": "ISC",
     "packageManager": "pnpm@10.18.2",
     "devDependencies": {

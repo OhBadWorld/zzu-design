@@ -1,0 +1,37 @@
+{
+    "name": "@kg-design/axios",
+    "version": "1.0.1",
+    "description": "",
+    "type": "module",
+    "main": "dist/index.js",
+    "module": "dist/index.js",
+    "typings": "dist/index.d.ts",
+    "publishConfig": {
+        "registry": "http://npm-registry.zhihuishu.com:4873/"
+    },
+    "files": [
+        "dist",
+        "package.json"
+    ],
+    "scripts": {
+        "dev": "tsdown --watch",
+        "build": "tsdown",
+        "typecheck": "tsc",
+        "prepublishOnly": "pnpm build"
+    },
+    "keywords": [
+        "axios"
+    ],
+    "author": "yuanjie.dong",
+    "license": "ISC",
+    "packageManager": "pnpm@10.18.2",
+    "devDependencies": {
+        "axios": "^1.13.2",
+        "tsdown": "^0.15.12",
+        "vue": "^3.5.22"
+    },
+    "peerDependencies": {
+        "axios": "^1.13.2",
+        "vue": "^3.5.22"
+    }
+}
