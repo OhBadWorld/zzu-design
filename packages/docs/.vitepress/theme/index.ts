@@ -1,7 +1,7 @@
 import './style.ts';
 import DefaultTheme from 'vitepress/theme';
-import KgIcon from '@kg-design/icon';
 import CodePreview from '../components/code-preview/index.vue';
+import KgIcon from '@kg-design/icon';
 
 import type { EnhanceAppContext } from 'vitepress';
 

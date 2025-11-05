@@ -5,6 +5,7 @@ import scss from 'rollup-plugin-scss';
 export default defineConfig(() => ({
     entry: ['src/index.ts'],
     platform: 'browser' as const,
+    clean: false,
     minify: true,
     plugins: [Vue({ isProduction: true }), scss({ fileName: 'index.css' })],
     unbundle: true,

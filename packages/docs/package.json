@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "docs:dev": "vitepress dev",
+        "start": "vitepress dev",
         "docs:build": "vitepress build",
         "docs:preview": "vitepress preview"
     },
@@ -15,6 +15,7 @@
     "packageManager": "pnpm@10.18.2",
     "dependencies": {
         "@kg-design/icon": "workspace:*",
+        "@kg-design/ui": "workspace:*",
         "normalize.css": "^8.0.1",
         "shiki": "^3.14.0",
         "vue": "^3.5.22"

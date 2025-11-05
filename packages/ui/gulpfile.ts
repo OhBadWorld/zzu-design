@@ -1,7 +1,7 @@
 import path from 'node:path';
 import url from 'node:url';
 import { Transform } from 'node:stream';
-import { dest, parallel, series, src } from 'gulp';
+import { dest, parallel, series, src, watch as gulpWatch } from 'gulp';
 import gulpSass from 'gulp-sass';
 import rename from 'gulp-rename';
 import * as dartSass from 'sass';
@@ -110,5 +110,16 @@ function autoImportStyle() {
 }
 
 export const build: TaskFunction = parallel(series(buildThemeChalk, copyThemeSource, mergeThemeStyle, autoImportStyle));
+
+export function watch() {
+    // @ts-ignore
+    build();
+    return gulpWatch(path.resolve(__dirname, 'src/**/*.scss'), function (cb) {
+        consola.info('scss file changed, start build...');
+        // @ts-ignore
+        build();
+        cb();
+    });
+}
 
 export default build;

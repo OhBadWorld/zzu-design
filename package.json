@@ -7,6 +7,7 @@
         "commitlint": "tsx scripts/commit-lint.ts",
         "prepare": "husky",
         "lint": "oxlint --fix",
+        "start": "pnpm run -r --parallel start",
         "format": "prettier --write \"**/*.{vue,ts,js,json,css,scss,md}\" --ignore-unknown"
     },
     "keywords": [],
