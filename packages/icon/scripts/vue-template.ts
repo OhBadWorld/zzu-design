@@ -147,7 +147,7 @@ export default ${componentName};
 
 declare module 'vue' {
     export interface GlobalComponents {
-        Kg${componentName}: typeof ${componentName};
+        ${componentName}: typeof ${componentName};
     }
 }`;
 };
