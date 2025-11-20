@@ -2,7 +2,7 @@
     "name": "@zzu/create-app",
     "version": "0.0.1",
     "type": "module",
-    "description": "create zuu app",
+    "description": "create zzu app",
     "main": "index.js",
     "bin": {
         "capp": "index.js"

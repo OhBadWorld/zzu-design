@@ -1,3 +1,3 @@
-# zuu-design
+# zzu-design
 
-zuu-design
+zzu-design

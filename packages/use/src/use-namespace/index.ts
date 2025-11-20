@@ -1,7 +1,7 @@
 import { computed, getCurrentInstance, inject, ref, unref } from 'vue';
 import type { InjectionKey, Ref } from 'vue';
 
-export const defaultNamespace = 'zuu';
+export const defaultNamespace = 'zzu';
 const statePrefix = 'is-';
 
 const _bem = (namespace: string, block: string, blockSuffix: string, element: string, modifier: string) => {
