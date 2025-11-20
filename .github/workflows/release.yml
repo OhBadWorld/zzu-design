@@ -35,17 +35,12 @@ jobs:
             - name: Install Dependencies
               run: pnpm install
 
-            - name: npm login
-              run: |
-                  echo "//npm-registry.zhihuishu.com:4873/:username=${{ secrets.NPM_USERNAME }}" >> ~/.npmrc
-                  echo "//npm-registry.zhihuishu.com:4873/:_password=$(echo -n ${{ secrets.NPM_PASSWORD }} | base64)" >> ~/.npmrc
-                  echo "//npm-registry.zhihuishu.com:4873/:email=${{ secrets.NPM_EMAIL }}" >> ~/.npmrc
-
             - name: Create Release Pull Request
               uses: changesets/action@v1
               with:
                   commit: 'chore: version'
                   version: pnpm changeset version
-                  # publish: pnpm changeset publish
+                  publish: pnpm changeset publish
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
