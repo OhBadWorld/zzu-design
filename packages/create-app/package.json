@@ -2,6 +2,7 @@
     "name": "@zzu/create-app",
     "version": "0.0.2",
     "type": "module",
+    "access": "public",
     "description": "create zzu app",
     "main": "index.js",
     "bin": {
