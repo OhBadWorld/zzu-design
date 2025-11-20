@@ -23,7 +23,8 @@
         "dev": "tsdown --watch",
         "build": "tsdown",
         "typecheck": "tsc",
-        "prepublishOnly": "pnpm build"
+        "prepublishOnly": "pnpm build",
+        "prepare": "pnpm build"
     },
     "keywords": [
         "use"
