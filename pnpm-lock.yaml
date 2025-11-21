@@ -28,6 +28,27 @@ importers:
             '@vue/test-utils':
                 specifier: ^2.4.6
                 version: 2.4.6
+            '@zzu/axios':
+                specifier: workspace:*
+                version: link:packages/axios
+            '@zzu/create-app':
+                specifier: workspace:*
+                version: link:packages/create-app
+            '@zzu/icon':
+                specifier: workspace:*
+                version: link:packages/icon
+            '@zzu/ui':
+                specifier: workspace:*
+                version: link:packages/ui
+            '@zzu/ui-auto-import-resolver':
+                specifier: workspace:*
+                version: link:packages/ui-auto-import-resolver
+            '@zzu/use':
+                specifier: workspace:*
+                version: link:packages/use
+            '@zzu/utils':
+                specifier: workspace:*
+                version: link:packages/utils
             husky:
                 specifier: ^9.1.7
                 version: 9.1.7
@@ -135,12 +156,6 @@ importers:
             '@clack/prompts':
                 specifier: ^0.11.0
                 version: 0.11.0
-            '@zzu/use':
-                specifier: workspace:*
-                version: link:../use
-            '@zzu/utils':
-                specifier: workspace:*
-                version: link:../utils
             '@types/fs-extra':
                 specifier: ^11.0.4
                 version: 11.0.4
@@ -150,6 +165,12 @@ importers:
             '@types/node':
                 specifier: ^24.9.2
                 version: 24.9.2
+            '@zzu/use':
+                specifier: workspace:*
+                version: link:../use
+            '@zzu/utils':
+                specifier: workspace:*
+                version: link:../utils
             fs-extra:
                 specifier: ^11.3.2
                 version: 11.3.2
@@ -183,12 +204,6 @@ importers:
 
     packages/ui:
         devDependencies:
-            '@zzu/use':
-                specifier: workspace:*
-                version: link:../use
-            '@zzu/utils':
-                specifier: workspace:*
-                version: link:../utils
             '@types/gulp':
                 specifier: ^4.0.18
                 version: 4.0.18
@@ -204,6 +219,12 @@ importers:
             '@types/gulp-sass':
                 specifier: ^6.0.0
                 version: 6.0.0
+            '@zzu/use':
+                specifier: workspace:*
+                version: link:../use
+            '@zzu/utils':
+                specifier: workspace:*
+                version: link:../utils
             chalk:
                 specifier: ^5.6.2
                 version: 5.6.2
@@ -246,6 +267,9 @@ importers:
             tsdown:
                 specifier: ^0.15.12
                 version: 0.15.12(typescript@5.9.3)(vue-tsc@3.1.2(typescript@5.9.3))
+            typescript:
+                specifier: ^5.9.3
+                version: 5.9.3
             unplugin-vue:
                 specifier: ^7.0.4
                 version: 7.0.4(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.93.2)(tsx@4.20.6)(vue@3.5.22(typescript@5.9.3))(yaml@2.8.1)

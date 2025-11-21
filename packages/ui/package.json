@@ -35,13 +35,13 @@
     "license": "ISC",
     "packageManager": "pnpm@10.18.2",
     "devDependencies": {
-        "@zzu/use": "workspace:*",
-        "@zzu/utils": "workspace:*",
         "@types/gulp": "^4.0.18",
         "@types/gulp-autoprefixer": "^0.0.37",
         "@types/gulp-concat": "^0.0.37",
         "@types/gulp-rename": "^2.0.7",
         "@types/gulp-sass": "^6.0.0",
+        "@zzu/use": "workspace:*",
+        "@zzu/utils": "workspace:*",
         "chalk": "^5.6.2",
         "concurrently": "^9.2.1",
         "consola": "^3.4.2",
@@ -56,6 +56,7 @@
         "sass": "^1.93.2",
         "ts-node": "^10.9.2",
         "tsdown": "^0.15.12",
+        "typescript": "^5.9.3",
         "unplugin-vue": "^7.0.4",
         "vinyl": "^3.0.1",
         "vue": "^3.5.22"
