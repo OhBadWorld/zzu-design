@@ -1,5 +1,5 @@
 import { type Ref, isRef, onDeactivated, onUnmounted, unref, watch, type WatchStopHandle } from 'vue';
-import { onMountedOrActivated } from '../onMountedOrActivated';
+import { onMountedOrActivated } from '../useMountedOrActivated';
 import { isBrowser } from '../utils';
 
 type TargetRef = EventTarget | Ref<EventTarget | undefined>;
