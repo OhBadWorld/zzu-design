@@ -3,7 +3,7 @@ name: Smart Water Reminder
 on:
   push:
     branches:
-      - main # 仅在该分支推送时触发
+     - main # 仅在该分支推送时触发
   schedule:
     # 工作日 9:00-18:00 每小时执行（UTC时间，对应北京时间 17:00-02:00，需要调整）
     # 针对北京时间 9:00-18:00 的cron表达式：
@@ -26,6 +26,10 @@ jobs:
 
       - name: Send reminder to WeChat
         run: |
+          # 强制按十进制解析 HOUR，避免八进制问题
+          HOUR=$(date +%H)
+          HOUR=$((10#$HOUR))
+
           # 获取当前小时（北京时间），并在非工作时间提前退出
           if [[ "${GITHUB_EVENT_NAME}" != "schedule" ]]; then
             if [[ "$HOUR" -lt 9 || "$HOUR" -gt 18 ]]; then
@@ -57,7 +61,7 @@ jobs:
               \"msgtype\": \"markdown\",
               \"markdown\": {
                 \"content\": \"$MESSAGE\n\n⏰ 提醒时间: $(date '+%H:%M')\n💧 今日小目标: 8杯水已完成 $COMPLETED/8杯\",
-                \"mentioned_list\": [\"@all\"]
-              }
+              },
+              \"mentioned_list\": \[\"@all\"\]
             }" \
             ${{ secrets.WECHAT_WEBHOOK_URL }}
