@@ -5,7 +5,7 @@ on:
     branches:
       - main # 仅在该分支推送时触发
   schedule:
-    # 工作日 9:00-18:00 每小时执行（UTC时间，对应北京时间 17:00-02:00，需要调整）1122
+    # 工作日 9:00-18:00 每小时执行（UTC时间，对应北京时间 17:00-02:00，需要调整）
     # 针对北京时间 9:00-18:00 的cron表达式：
     - cron: '0 1,2,3,4,5,6,7,8,9,10 * * 1-5' # UTC时间 1:00-10:00 = 北京时间 9:00-18:00
   workflow_dispatch:
@@ -16,20 +16,24 @@ env:
 jobs:
   water-reminder:
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule' || (github.event_name != 'schedule' && env.HOUR >= '09' && env.HOUR <= '18')
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-        # 设置环境变量 HOUR 为当前小时（北京时间）
+      # 设置环境变量 HOUR 为当前小时（北京时间）
       - name: Set HOUR environment variable
         run: echo "HOUR=$(date +%H)" >> $GITHUB_ENV
-        
+
       - name: Send reminder to WeChat
         run: |
-          # 获取当前小时（北京时间）
-          # HOUR=$(date +%H)
-          
+          # 获取当前小时（北京时间），并在非工作时间提前退出
+          if [[ "${GITHUB_EVENT_NAME}" != "schedule" ]]; then
+            if [[ "$HOUR" -lt 9 || "$HOUR" -gt 18 ]]; then
+              echo "当前不是工作时间（09-18），无需提醒，提前退出。"
+              exit 0
+            fi
+          fi
+
           # 根据不同时段生成不同的提醒消息
           case $HOUR in
             "09") MESSAGE="🌞 **早安喝水时间！**\n> 开启新的一天，从一杯温水开始～" ;;
@@ -39,13 +43,13 @@ jobs:
           esac
 
           # 计算已完成杯数（仅 09-18 点有效，否则为 0）
-          if [[ $HOUR -ge 09 && $HOUR -le 18 ]]; then
+          if [[ $HOUR -ge 9 && $HOUR -le 18 ]]; then
             COMPLETED=$((10#$HOUR - 8))
           else
             COMPLETED=0
             MESSAGE="🌙 **当前非喝水时段**\n> 工作时间（9:00-18:00）每小时提醒喝水哦～"
           fi
-          
+
           # 发送请求到企业微信
           curl -X POST \
             -H "Content-Type: application/json" \
@@ -53,7 +57,7 @@ jobs:
               \"msgtype\": \"markdown\",
               \"markdown\": {
                 \"content\": \"$MESSAGE\n\n⏰ 提醒时间: $(date '+%H:%M')\n💧 今日小目标: 8杯水已完成 $COMPLETED/8杯\",
-                \"mentioned_list\": \[\"@all\"\]
+                \"mentioned_list\": [\"@all\"]
               }
             }" \
             ${{ secrets.WECHAT_WEBHOOK_URL }}
