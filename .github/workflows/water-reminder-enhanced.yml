@@ -58,10 +58,10 @@ jobs:
           curl -X POST \
             -H "Content-Type: application/json" \
             -d "{
-              \"msgtype\": \"markdown\",
-              \"markdown\": {
+              \"msgtype\": \"text\",
+              \"text\": {
                 \"content\": \"$MESSAGE\n\n⏰ 提醒时间: $(date '+%H:%M')\n💧 今日小目标: 8杯水已完成 $COMPLETED/8杯\",
+                \"mentioned_list\": [\"@all\"]
               },
-              \"mentioned_list\": [[\"@all\"]]
             }" \
             ${{ secrets.WECHAT_WEBHOOK_URL }}
