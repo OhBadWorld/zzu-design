@@ -37,8 +37,8 @@ jobs:
           # 获取当前小时（北京时间），并在非工作时间提前退出
           # 仅push和手动触发时执行，计划任务(schedule)无需本地判断
           if [[ "${GITHUB_EVENT_NAME}" != "schedule" ]]; then
-            if [[ "$HOUR" -lt 9 || "$HOUR" -gt 18 ]]; then
-              echo "当前不是工作时间（09-18），无需提醒，提前退出。"
+            if [[ "$HOUR" -lt 9 || "$HOUR" -gt 19 ]]; then
+              echo "当前不是工作时间（09-19），无需提醒，提前退出。"
               exit 0
             fi
           fi
@@ -51,12 +51,12 @@ jobs:
             *) MESSAGE=$'🍵 喝水时间到！\n💪 工作辛苦了，记得补充水分哦～';;
           esac
 
-          # 计算已完成杯数（仅 09-18 点有效，否则为 0）
-          if [[ $HOUR -ge 9 && $HOUR -le 18 ]]; then
+          # 计算已完成杯数（仅 09-19 点有效，否则为 0）
+          if [[ $HOUR -ge 9 && $HOUR -le 19 ]]; then
             COMPLETED=$((HOUR - 8))
           else
             COMPLETED=0
-            MESSAGE=$'🌙 **当前非喝水时段**\n> 工作时间（9:00-18:00）每小时提醒喝水哦～'
+            MESSAGE=$'🌙 当前非喝水时段\n> 工作时间（9:00-19:00）每小时提醒喝水哦～'
           fi
 
           # 组装提醒内容（换行用$'\n'，防止Json被破坏）
