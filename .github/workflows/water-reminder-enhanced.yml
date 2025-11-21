@@ -2,8 +2,8 @@ name: Smart Water Reminder
 
 on:
   push:
-    branches:
-     - main # 仅在该分支推送时触发
+    #branches:
+    # - main # 仅在该分支推送时触发
   schedule:
     # 工作日 9:00-18:00 每小时执行（UTC时间，对应北京时间 17:00-02:00，需要调整）
     # 尝试提前5分钟触发 针对北京时间 9:00-18:00 的cron表达式：
@@ -60,8 +60,8 @@ jobs:
             -d "{
               \"msgtype\": \"text\",
               \"text\": {
-                \"content\": \"$MESSAGE\n\n⏰ 提醒时间: $(date '+%H:%M')\n🍵 今日小目标: 8杯水已完成 $COMPLETED/8杯\",
-                \"mentioned_list\": [\"@all\"]
+                \"content\": \"$MESSAGE\n\n ⏰ 提醒时间: $(date '+%H:%M')\n 🍵 今日小目标: 8杯水已完成 $COMPLETED/8杯\",
+                \"mentioned_list\": [\" @all\"]
               },
             }" \
             ${{ secrets.WECHAT_WEBHOOK_URL }}
