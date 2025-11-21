@@ -45,90 +45,10 @@ jobs:
 
           # 根据不同时段生成不同的提醒消息
           case $HOUR in
-            9) MESSAGE=
-
-          # 计算已完成杯数（仅 09-18 点有效，否则为 0）
-          if [[ $HOUR -ge 9 && $HOUR -le 18 ]]; then
-            COMPLETED=$((HOUR - 8))
-          else
-            COMPLETED=0
-            MESSAGE="🌙 **当前非喝水时段**\n> 工作时间（9:00-18:00）每小时提醒喝水哦～"
-          fi
-
-          # 组装提醒内容（换行用$'\n'，防止Json被破坏）
-          CONTENT="${MESSAGE}"$'\n\n'"⏰ 提醒时间: ${CURRENT_TIME}"$'\n'"🍵 今日小目标: 8杯水已完成 ${COMPLETED}/8杯"
-
-          # 构造json，防止特殊字符导致curl报错
-          JSON=$(jq -nc --arg text "$CONTENT" '{"msgtype":"text","text":{"content":$text,"mentioned_list":["@all"]}}')
-
-          # 发送请求到企业微信
-          curl -X POST \
-            -H "Content-Type: application/json" \
-            -d "$JSON" \
-            "$WECHAT_WEBHOOK_URL"🌞 早安喝水时间！\n🔛 开启新的一天，从一杯温水开始～';;
-            12) MESSAGE=
-
-          # 计算已完成杯数（仅 09-18 点有效，否则为 0）
-          if [[ $HOUR -ge 9 && $HOUR -le 18 ]]; then
-            COMPLETED=$((HOUR - 8))
-          else
-            COMPLETED=0
-            MESSAGE="🌙 **当前非喝水时段**\n> 工作时间（9:00-18:00）每小时提醒喝水哦～"
-          fi
-
-          # 组装提醒内容（换行用$'\n'，防止Json被破坏）
-          CONTENT="${MESSAGE}"$'\n\n'"⏰ 提醒时间: ${CURRENT_TIME}"$'\n'"🍵 今日小目标: 8杯水已完成 ${COMPLETED}/8杯"
-
-          # 构造json，防止特殊字符导致curl报错
-          JSON=$(jq -nc --arg text "$CONTENT" '{"msgtype":"text","text":{"content":$text,"mentioned_list":["@all"]}}')
-
-          # 发送请求到企业微信
-          curl -X POST \
-            -H "Content-Type: application/json" \
-            -d "$JSON" \
-            "$WECHAT_WEBHOOK_URL"🍱 午间喝水时间！\n🥣 午餐后半小时，喝杯水助消化～';;
-            17) MESSAGE=
-
-          # 计算已完成杯数（仅 09-18 点有效，否则为 0）
-          if [[ $HOUR -ge 9 && $HOUR -le 18 ]]; then
-            COMPLETED=$((HOUR - 8))
-          else
-            COMPLETED=0
-            MESSAGE="🌙 **当前非喝水时段**\n> 工作时间（9:00-18:00）每小时提醒喝水哦～"
-          fi
-
-          # 组装提醒内容（换行用$'\n'，防止Json被破坏）
-          CONTENT="${MESSAGE}"$'\n\n'"⏰ 提醒时间: ${CURRENT_TIME}"$'\n'"🍵 今日小目标: 8杯水已完成 ${COMPLETED}/8杯"
-
-          # 构造json，防止特殊字符导致curl报错
-          JSON=$(jq -nc --arg text "$CONTENT" '{"msgtype":"text","text":{"content":$text,"mentioned_list":["@all"]}}')
-
-          # 发送请求到企业微信
-          curl -X POST \
-            -H "Content-Type: application/json" \
-            -d "$JSON" \
-            "$WECHAT_WEBHOOK_URL"🌇 傍晚喝水时间！\n⛽️ 补充水分，为下班前的冲刺加油！';;
-            *) MESSAGE=
-
-          # 计算已完成杯数（仅 09-18 点有效，否则为 0）
-          if [[ $HOUR -ge 9 && $HOUR -le 18 ]]; then
-            COMPLETED=$((HOUR - 8))
-          else
-            COMPLETED=0
-            MESSAGE="🌙 **当前非喝水时段**\n> 工作时间（9:00-18:00）每小时提醒喝水哦～"
-          fi
-
-          # 组装提醒内容（换行用$'\n'，防止Json被破坏）
-          CONTENT="${MESSAGE}"$'\n\n'"⏰ 提醒时间: ${CURRENT_TIME}"$'\n'"🍵 今日小目标: 8杯水已完成 ${COMPLETED}/8杯"
-
-          # 构造json，防止特殊字符导致curl报错
-          JSON=$(jq -nc --arg text "$CONTENT" '{"msgtype":"text","text":{"content":$text,"mentioned_list":["@all"]}}')
-
-          # 发送请求到企业微信
-          curl -X POST \
-            -H "Content-Type: application/json" \
-            -d "$JSON" \
-            "$WECHAT_WEBHOOK_URL"🍵 喝水时间到！\n💪 工作辛苦了，记得补充水分哦～';;
+            9) MESSAGE="🌞 早安喝水时间！\n 🔛 开启新的一天，从一杯温水开始～";;
+            12) MESSAGE="🍱 午间喝水时间！\n 🥣 午餐后半小时，喝杯水助消化～";;
+            17) MESSAGE="🌇 傍晚喝水时间！\n ⛽️ 补充水分，为下班前的冲刺加油！";;
+            *) MESSAGE="🍵 喝水时间到！\n 💪 工作辛苦了，记得补充水分哦～";;
           esac
 
           # 计算已完成杯数（仅 09-18 点有效，否则为 0）
