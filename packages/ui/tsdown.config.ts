@@ -12,4 +12,10 @@ export default defineConfig(() => ({
     dts: {
         vue: true,
     },
+    resolve: {
+        alias: {
+            '@zzu/use': '../use',
+            '@zzu/utils': '../utils',
+        },
+    },
 }));
