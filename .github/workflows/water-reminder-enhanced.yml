@@ -16,14 +16,19 @@ env:
 jobs:
   water-reminder:
     runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || (github.event_name != 'schedule' && env.HOUR >= '09' && env.HOUR <= '18')
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+        # 设置环境变量 HOUR 为当前小时（北京时间）
+      - name: Set HOUR environment variable
+        run: echo "HOUR=$(date +%H)" >> $GITHUB_ENV
         
       - name: Send reminder to WeChat
         run: |
           # 获取当前小时（北京时间）
-          HOUR=$(date -d "+8 hours" +%H)
+          # HOUR=$(date +%H)
           
           # 根据不同时段生成不同的提醒消息
           case $HOUR in
@@ -32,6 +37,14 @@ jobs:
             "17") MESSAGE="🌇 **傍晚喝水时间！**\n> 补充水分，为下班前的冲刺加油！" ;;
             *) MESSAGE="💧 **喝水时间到！**\n> 工作辛苦了，记得补充水分哦～" ;;
           esac
+
+          # 计算已完成杯数（仅 09-18 点有效，否则为 0）
+          if [[ $HOUR -ge 09 && $HOUR -le 18 ]]; then
+            COMPLETED=$((10#$HOUR - 8))
+          else
+            COMPLETED=0
+            MESSAGE="🌙 **当前非喝水时段**\n> 工作时间（9:00-18:00）每小时提醒喝水哦～"
+          fi
           
           # 发送请求到企业微信
           curl -X POST \
@@ -39,7 +52,8 @@ jobs:
             -d "{
               \"msgtype\": \"markdown\",
               \"markdown\": {
-                \"content\": \"$MESSAGE\n\n⏰ 提醒时间: $(date -d '+8 hours' '+%H:%M')\n💧 今日小目标: 8杯水已完成 $(( (10#$HOUR - 8) ))/8杯\"
+                \"content\": \"$MESSAGE\n\n⏰ 提醒时间: $(date '+%H:%M')\n💧 今日小目标: 8杯水已完成 $COMPLETED/8杯\",
+                \"mentioned_list\": \[\"@all\"\]
               }
             }" \
             ${{ secrets.WECHAT_WEBHOOK_URL }}
