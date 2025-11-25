@@ -3,11 +3,10 @@ name: Smart Water Reminder
 on:
   push:
     branches:
-    - main # 仅在该分支推送时触发
+      - main
   schedule:
-    # 工作日 9:00-18:00 每小时执行（UTC时间，对应北京时间 17:00-02:00，需要调整）
-    # 尝试提前5分钟触发 针对北京时间 9:00-18:00 的cron表达式：
-    - cron: '0 1-10 * * 1-5' # UTC时间 1:00-11:00 = 北京时间 9:00-19:00
+    # 工作日 9:00-17:00 每小时执行（UTC 时间 1:00-9:00）
+    - cron: '0 1-9 * * 1-5'
   workflow_dispatch:
 
 env:
@@ -20,30 +19,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 设置环境变量 HOUR 为当前小时（北京时间）
-      - name: Set HOUR environment variable
-        run: |
-          echo "HOUR=$(TZ='Asia/Shanghai' date +%H)" >> $GITHUB_ENV
-
       - name: Send reminder to WeChat
         env:
           WECHAT_WEBHOOK_URL: ${{ secrets.WECHAT_WEBHOOK_URL }}
         run: |
-          # 获取当前北京时间的小时和时间（正确设置方法）
+          # 获取当前北京时间
           CURRENT_TIME=$(TZ='Asia/Shanghai' date '+%H:%M')
           HOUR=$(TZ='Asia/Shanghai' date '+%H')
-          HOUR=$((10#$HOUR)) # 强制十进制解析，防止08被当成八进制
+          HOUR=$((10#$HOUR))
 
-          # 获取当前小时（北京时间），并在非工作时间提前退出
-          # 仅push和手动触发时执行，计划任务(schedule)无需本地判断
-          if [[ "${GITHUB_EVENT_NAME}" != "schedule" ]]; then
-            if [[ "$HOUR" -lt 9 || "$HOUR" -gt 18 ]]; then
-              echo "当前不是工作时间（09-19），无需提醒，提前退出。"
-              exit 0
-            fi
+          # 严格限制工作时间（9:00-18:00），对所有触发方式生效
+          if [[ "$HOUR" -lt 9 || "$HOUR" -gt 18 ]]; then
+            echo "当前不是工作时间，退出。"
+            exit 0
           fi
 
-          # 根据不同时段生成不同的提醒消息
+          # 时段消息
           case $HOUR in
             9) MESSAGE=$'🌞 早安喝水时间！\n🔛 开启新的一天，从一杯温水开始～';;
             12) MESSAGE=$'🍱 午间喝水时间！\n🥣 午餐后半小时，喝杯水健脾开胃～';;
@@ -51,22 +42,17 @@ jobs:
             *) MESSAGE=$'🍵 喝水时间到！\n💪 工作辛苦了，记得补充水分哦～';;
           esac
 
-          # 计算已完成杯数（仅 09-18 点有效，否则为 0）
-          if [[ $HOUR -ge 9 && $HOUR -le 18 ]]; then
-            COMPLETED=$((HOUR - 8))
-            [[ $COMPLETED -gt 8 ]] && COMPLETED=8
-          else
-            COMPLETED=0
-            MESSAGE=$'🌙 当前非喝水时段\n> 工作时间（9:00-19:00）每小时提醒喝水哦～'
-          fi
+          # 计算杯数（最大8杯）
+          COMPLETED=$((HOUR - 8))
+          [[ $COMPLETED -gt 8 ]] && COMPLETED=8
 
-          # 组装提醒内容（换行用$'\n'，防止Json被破坏）
+          # 组装内容
           CONTENT="${MESSAGE}"$'\n\n'"⏰ 提醒时间: ${CURRENT_TIME}"$'\n'"🍵 今日小目标: 8杯水已完成 ${COMPLETED}/8杯"
 
-          # 构造json，防止特殊字符导致curl报错
+          # JSON 构造
           JSON=$(jq -nc --arg text "$CONTENT" '{"msgtype":"text","text":{"content":$text,"mentioned_list":["@all"]}}')
 
-          # 发送请求到企业微信
+          # 发送
           curl -X POST \
             -H "Content-Type: application/json" \
             -d "$JSON" \
