@@ -22,10 +22,11 @@ jobs:
       - name: Send reminder to WeChat
         env:
           WECHAT_WEBHOOK_URL: ${{ secrets.WECHAT_WEBHOOK_URL }}
+          TZ: Asia/Shanghai
         run: |
-          # 获取当前北京时间
-          CURRENT_TIME=$(TZ='Asia/Shanghai' date '+%H:%M')
-          HOUR=$(TZ='Asia/Shanghai' date '+%H')
+          # 直接使用环境变量TZ获取当前北京时间，确保所有时间命令都使用正确时区
+          CURRENT_TIME=$(date '+%H:%M')
+          HOUR=$(date '+%H')
           HOUR=$((10#$HOUR))
 
           # 严格限制工作时间（9:00-18:00），对所有触发方式生效
@@ -36,15 +37,66 @@ jobs:
 
           # 时段消息
           case $HOUR in
-            9) MESSAGE=$'🌞 早安喝水时间！\n🔛 开启新的一天，从一杯温水开始～';;
-            12) MESSAGE=$'🍱 午间喝水时间！\n🥣 午餐后半小时，喝杯水健脾开胃～';;
-            17) MESSAGE=$'🌇 傍晚喝水时间！\n⛽️ 补充水分，为下班前的冲刺加油！';;
-            *) MESSAGE=$'🍵 喝水时间到！\n💪 工作辛苦了，记得补充水分哦～';;
+            9) MESSAGE=
+
+          # 组装内容
+          CONTENT="${MESSAGE}"$'\n\n'"⏰ 提醒时间: ${CURRENT_TIME}"$'\n'"🍵 今日小目标: 8杯水已完成 ${COMPLETED}/8杯"
+
+          # JSON 构造
+          JSON=$(jq -nc --arg text "$CONTENT" '{"msgtype":"text","text":{"content":$text,"mentioned_list":["@all"]}}')
+
+          # 发送
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -d "$JSON" \
+            "$WECHAT_WEBHOOK_URL"🌞 早安喝水时间！\n🔛 开启新的一天，从一杯温水开始～';;
+            12) MESSAGE=
+
+          # 组装内容
+          CONTENT="${MESSAGE}"$'\n\n'"⏰ 提醒时间: ${CURRENT_TIME}"$'\n'"🍵 今日小目标: 8杯水已完成 ${COMPLETED}/8杯"
+
+          # JSON 构造
+          JSON=$(jq -nc --arg text "$CONTENT" '{"msgtype":"text","text":{"content":$text,"mentioned_list":["@all"]}}')
+
+          # 发送
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -d "$JSON" \
+            "$WECHAT_WEBHOOK_URL"🍱 午间喝水时间！\n🥣 午餐后半小时，喝杯水健脾开胃～';;
+            17) MESSAGE=
+
+          # 组装内容
+          CONTENT="${MESSAGE}"$'\n\n'"⏰ 提醒时间: ${CURRENT_TIME}"$'\n'"🍵 今日小目标: 8杯水已完成 ${COMPLETED}/8杯"
+
+          # JSON 构造
+          JSON=$(jq -nc --arg text "$CONTENT" '{"msgtype":"text","text":{"content":$text,"mentioned_list":["@all"]}}')
+
+          # 发送
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -d "$JSON" \
+            "$WECHAT_WEBHOOK_URL"🌇 傍晚喝水时间！\n⛽️ 补充水分，为下班前的冲刺加油！';;
+            *) MESSAGE=
+
+          # 组装内容
+          CONTENT="${MESSAGE}"$'\n\n'"⏰ 提醒时间: ${CURRENT_TIME}"$'\n'"🍵 今日小目标: 8杯水已完成 ${COMPLETED}/8杯"
+
+          # JSON 构造
+          JSON=$(jq -nc --arg text "$CONTENT" '{"msgtype":"text","text":{"content":$text,"mentioned_list":["@all"]}}')
+
+          # 发送
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -d "$JSON" \
+            "$WECHAT_WEBHOOK_URL"🍵 喝水时间到！\n💪 工作辛苦了，记得补充水分哦～';;
           esac
 
-          # 计算杯数（最大8杯）
+          # 计算杯数，确保结果在1-8之间
           COMPLETED=$((HOUR - 8))
+          # 确保杯数不会超过8杯
           [[ $COMPLETED -gt 8 ]] && COMPLETED=8
+          # 确保杯数不会为负数
+          [[ $COMPLETED -lt 1 ]] && COMPLETED=1
 
           # 组装内容
           CONTENT="${MESSAGE}"$'\n\n'"⏰ 提醒时间: ${CURRENT_TIME}"$'\n'"🍵 今日小目标: 8杯水已完成 ${COMPLETED}/8杯"
