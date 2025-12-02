@@ -25,8 +25,8 @@ jobs:
           # 显式设置TZ环境变量，确保所有时间命令都使用北京时间
           export TZ=Asia/Shanghai
           
-          # 获取当前北京时间，精确到分钟
-          CURRENT_TIME=$(date '+%H:%M')
+          # 获取当前北京时间，精确到分钟（减去8小时修正时区）
+          CURRENT_TIME=$(date -d '-8 hours' '+%H:%M')
           # 获取当前小时数，用于判断时段和计算杯数
           HOUR=$(date '+%H')
           # 强制十进制解析，防止08、09被当作八进制
