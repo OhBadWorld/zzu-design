@@ -58,8 +58,7 @@ jobs:
           [[ $COMPLETED -lt 1 ]] && COMPLETED=1
 
           # 组装内容 - 使用$'...'语法确保换行符正确解析
-          # CONTENT="${MESSAGE}"$'\n\n'"⏰ 提醒时间: ${CURRENT_TIME}"$'\n'"🍵 今日小目标: 8杯水已完成 ${COMPLETED}/8杯"
-          CONTENT="${MESSAGE}"$'\n\n'🍵 今日小目标: 8杯水已完成 ${COMPLETED}/8杯"
+          CONTENT="${MESSAGE}"$'\n\n'"⏰ 提醒时间: ${CURRENT_TIME}"$'\n'"🍵 今日小目标: 8杯水已完成 ${COMPLETED}/8杯"
           
           # 发送企业微信消息
           curl "${WECHAT_WEBHOOK_URL}" \
